@@ -40,4 +40,3 @@ jobs:
           title: Release v1.0.0  # Replace with your desired release title
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-
