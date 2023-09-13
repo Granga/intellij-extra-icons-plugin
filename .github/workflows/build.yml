@@ -36,5 +36,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ steps.find_zip.outputs.zip_path }}
+          token: ${{ secrets.GH_PAT }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
