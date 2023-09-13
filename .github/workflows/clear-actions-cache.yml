@@ -7,5 +7,5 @@ jobs:
     steps:
       - uses: MyAlbum/purge-cache@v2
         with:
-          max-age: 604800 # a week
+          max-age: 60 # a minute
           debug: true
