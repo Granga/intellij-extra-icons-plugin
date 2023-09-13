@@ -1,5 +1,5 @@
 name: Clear Actions Cache
-on: [ push, pull_request ]
+on: [ push, pull_request, workflow_dispatch ]
 jobs:
   clear:
     name: Clear github actions cache
