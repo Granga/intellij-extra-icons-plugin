@@ -36,6 +36,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ steps.find_zip.outputs.zip_path }}
-          tag_name: v1.0.0  # Replace with your desired release tag
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
