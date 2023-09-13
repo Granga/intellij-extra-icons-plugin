@@ -1,5 +1,5 @@
 <idea-plugin require-restart="true">
-    <id>lermitage.intellij.extra.icons</id>
+    <id>lermitagefree.intellij.extra.icons</id>
     <name>Extra Icons</name>
     <version>REPLACED_BY_GRADLE</version>
     <vendor email="jonathan@lermitage.biz" url="https://github.com/jonathanlermitage">JONATHAN_LERMITAGE</vendor>
