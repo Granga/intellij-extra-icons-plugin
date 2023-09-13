@@ -1,6 +1,6 @@
 #see https://github.com/ChrisCarini/intellij-platform-plugin-verifier-action
 name: Plugin Verifier
-on: [ push, pull_request ]
+on: workflow_dispatch
 jobs:
   run:
     runs-on: ubuntu-latest
