@@ -5,8 +5,9 @@
     <vendor email="jonathan@lermitage.biz" url="https://github.com/jonathanlermitage">JONATHAN_LERMITAGE</vendor>
     <!-- required parameters for paid plugins: https://plugins.jetbrains.com/docs/marketplace/add-required-parameters.html -->
     <!-- IMPORTANT reminder: change the release-date and release-version on major version changes only -->
-    <product-descriptor code="PEXTRAICONS" release-date="20230421" release-version="20232"/>
-
+    <!--    comment this line for repackaging no paid version-->
+    <!--    <product-descriptor code="PEXTRAICONS" release-date="20220225" release-version="20221"/>-->
+    
     <description><![CDATA[
       <ul>
         <li>Adds <b>500+ icons</b> for files like Travis YML, GitLab YML, Angular files, etc. Many icons have <b>variants</b>, so if you are not happy with the default icon, you can choose another.</li>
