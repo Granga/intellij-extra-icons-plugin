@@ -22,17 +22,20 @@ jobs:
           gradle-home-cache-cleanup: true
 
       - name: Build and verify
+        run: ./gradlew clean buildPlugin verifyPlugin verifypluginconfiguration -PpluginVerifyProductDescriptor=true -PpluginIdeaVersion=${{ matrix.ij }} --warning-mode all
+      
+      - name: Locate ZIP File
+        id: find_zip
         run: |
-          ./gradlew clean buildPlugin test verifyPlugin verifypluginconfiguration -PpluginVerifyProductDescriptor=true -PpluginIdeaVersion=${{ matrix.ij }} --warning-mode all
-          # Use the find command to locate the JAR file in the custom output directory
-          JAR_FILE=$(find . -type f -name "my-plugin.jar" -path "build/build-artifacts")
-          echo "Found JAR file: $JAR_FILE"
+          find ./build/distributions -type f -name "*.zip"
+          echo "::set-output name=zip_path::$(find ./build/distributions -type f -name '*.zip')"
         shell: bash
+        
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ env.JAR_FILE }}
+          files: ${{ steps.find_zip.outputs.zip_path }}
           tag_name: v1.0.0  # Replace with your desired release tag
           title: Release v1.0.0  # Replace with your desired release title
         env:
