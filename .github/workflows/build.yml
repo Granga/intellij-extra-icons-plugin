@@ -22,4 +22,19 @@ jobs:
           gradle-home-cache-cleanup: true
 
       - name: Build and verify
-        run: ./gradlew clean buildPlugin test verifyPlugin verifypluginconfiguration -PpluginVerifyProductDescriptor=true -PpluginIdeaVersion=${{ matrix.ij }} --warning-mode all
+        run: |
+          ./gradlew clean buildPlugin test verifyPlugin verifypluginconfiguration -PpluginVerifyProductDescriptor=true -PpluginIdeaVersion=${{ matrix.ij }} --warning-mode all
+          # Use the find command to locate the JAR file in the custom output directory
+          JAR_FILE=$(find . -type f -name "my-plugin.jar" -path "build/build-artifacts")
+          echo "Found JAR file: $JAR_FILE"
+        shell: bash
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ env.JAR_FILE }}
+          tag_name: v1.0.0  # Replace with your desired release tag
+          title: Release v1.0.0  # Replace with your desired release title
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+
