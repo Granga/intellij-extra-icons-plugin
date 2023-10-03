@@ -22,7 +22,7 @@ public class ExtraIconProvider extends BaseIconProvider implements DumbAware {
     private static final String[] YML = new String[]{".yaml", ".yml"};
 
     @NotNull
-    public static List<Model> allModels() {
+    public static List<Model> allModels() { // TODO move to SequencedCollection once migrated to jdk21?
         return Stream.of(
 
                 //
@@ -676,9 +676,9 @@ public class ExtraIconProvider extends BaseIconProvider implements DumbAware {
                     .start("elastic").end(YML),
                 ofFile("expo_eas", "extra-icons/expo.svg", "Expo EAS: eas.json")
                     .eq("eas.json"),
-                ofFile("cerebro", "extra-icons/elastic-cerebro.png", "Cerebro: cerebro(.conf)")
+                ofFile("cerebro", "extra-icons/elastic-cerebro.svg", "Cerebro: cerebro(.conf)")
                     .eq("cerebro").mayEnd(".conf"),
-                ofFile("cerebro1", "extra-icons/elastic-cerebro.png", "Cerebro: start by 'cerebro' and end by '.conf'")
+                ofFile("cerebro1", "extra-icons/elastic-cerebro.svg", "Cerebro: start by 'cerebro' and end by '.conf'")
                     .start("cerebro").end(".conf"),
                 ofFile("faq", "extra-icons/faq.svg", "FAQ: faq(.md,.txt,.adoc,.rst)")
                     .eq("faq").mayEnd(TXT)
@@ -737,12 +737,15 @@ public class ExtraIconProvider extends BaseIconProvider implements DumbAware {
                     .altIcons("extra-icons/java_alt.svg"),
                 ofFile("imgbot", "extra-icons/imgbot.svg", "ImgBot: .imgbotconfig")
                     .eq(".imgbotconfig"),
-                ofFile("jenkins", "extra-icons/jenkins.png", "Jenkins: jenkinsfile(.xml,.yml,...), jenkins")
-                    .eq("jenkinsfile", "jenkins").mayEnd(CFG),
-                ofFile("jenkins1", "extra-icons/jenkins.png", "Jenkins: start by 'jenkins and end by '.xml,.yml,...'")
-                    .start("jenkins").end(CFG),
-                ofFile("jenkins2", "extra-icons/jenkins.png", "Jenkins: start by 'jenkins' and contain no dot")
-                    .start("jenkins").noDot(),
+                ofFile("jenkins", "extra-icons/jenkins.svg", "Jenkins: jenkinsfile(.xml,.yml,...), jenkins")
+                    .eq("jenkinsfile", "jenkins").mayEnd(CFG)
+                    .altIcons("extra-icons/jenkins_alt.png"),
+                ofFile("jenkins1", "extra-icons/jenkins.svg", "Jenkins: start by 'jenkins and end by '.xml,.yml,...'")
+                    .start("jenkins").end(CFG)
+                    .altIcons("extra-icons/jenkins_alt.png"),
+                ofFile("jenkins2", "extra-icons/jenkins.svg", "Jenkins: start by 'jenkins' and contain no dot")
+                    .start("jenkins").noDot()
+                    .altIcons("extra-icons/jenkins_alt.png"),
                 ofFile("jest_js", "extra-icons/jest.svg", "Jest: jest.config.js")
                     .eq("jest.config.js"),
                 ofFile("jest_ts", "extra-icons/jest.svg", "Jest: jest.config.ts")
@@ -789,11 +792,11 @@ public class ExtraIconProvider extends BaseIconProvider implements DumbAware {
                     .altIcons("extra-icons/license_alt.png"),
                 ofFile("lighttpd", "extra-icons/lighttpd.svg", "Lighttpd: lighttpd.conf")
                     .eq("lighttpd.conf"),
-                ofFile("log4j", "extra-icons/log4j.png", "Log4j: log4j(.xml,.yml,...), log4j-test")
+                ofFile("log4j", "extra-icons/log4j.svg", "Log4j: log4j(.xml,.yml,...), log4j-test")
                     .eq("log4j", "log4j-test").mayEnd(CFG),
-                ofFile("logback", "extra-icons/logback.png", "Logback: logback(.xml,.yml,...)")
+                ofFile("logback", "extra-icons/logback.svg", "Logback: logback(.xml,.yml,...)")
                     .eq("logback").mayEnd(CFG),
-                ofFile("logback1", "extra-icons/logback.png", "Logback: start by 'logback-' and end by '.xml,.yml,...'")
+                ofFile("logback1", "extra-icons/logback.svg", "Logback: start by 'logback-' and end by '.xml,.yml,...'")
                     .start("logback-").mayEnd(CFG),
                 ofFile("logstash", "extra-icons/logstash.png", "Logstash: logstash(.cfg,.conf,.yml,.yaml)")
                     .eq("logstash").mayEnd(".cfg", ".conf", ".yml", ".yaml"),
@@ -842,7 +845,7 @@ public class ExtraIconProvider extends BaseIconProvider implements DumbAware {
                     .eq("package-info.java"),
                 ofFile("packagejson", "extra-icons/npm.svg", "NPM: package.json")
                     .eq("package.json"),
-                ofFile("packagejsonlock", "extra-icons/packagejsonlock.png", "NPM: package-lock.json")
+                ofFile("packagejsonlock", "extra-icons/packagejsonlock.svg", "NPM: package-lock.json")
                     .eq("package-lock.json"),
                 ofFile("poetry-poetry-lock", "extra-icons/poetry_lock.svg", "Poetry: poetry.lock")
                     .eq("poetry.lock"),
@@ -1021,15 +1024,20 @@ public class ExtraIconProvider extends BaseIconProvider implements DumbAware {
                 ofFile("ext_sh", "extra-icons/bash.svg", "Bash: *.sh")
                     .end(".sh"),
                 ofFile("ext_c", "extra-icons/c.svg", "C: *.c")
-                    .end(".c"),
+                    .end(".c")
+                    .autoLoadNewUIIconVariant(),
                 ofFile("ext_cc", "extra-icons/cpp.svg", "C++: *.cc")
-                    .end(".cc"),
+                    .end(".cc")
+                    .autoLoadNewUIIconVariant(),
                 ofFile("ext_cpp", "extra-icons/cpp.svg", "C++: *.cpp")
-                    .end(".cpp"),
+                    .end(".cpp")
+                    .autoLoadNewUIIconVariant(),
                 ofFile("ext_h", "extra-icons/h.svg", "C/C++: *.h")
-                    .end(".h"),
+                    .end(".h")
+                    .autoLoadNewUIIconVariant(),
                 ofFile("ext_hpp", "extra-icons/h.svg", "C/C++: *.hpp")
-                    .end(".hpp"),
+                    .end(".hpp")
+                    .autoLoadNewUIIconVariant(),
                 ofFile("ext_cert", "extra-icons/certificate.svg", "Certificate: *.jks, *.pem, *.crt, *.cert, *.ca-bundle, *.cer, ...")
                     .end(".jks", ".pem", ".crt", ".cert", ".ca-bundle", ".cer", ".jceks", ".p12", ".p7b", ".p7s", ".pfx", ".pubkey")
                     .altIcons("extra-icons/certificate_alt.svg"),
@@ -1070,13 +1078,17 @@ public class ExtraIconProvider extends BaseIconProvider implements DumbAware {
                 ofFile("ext_jinja", "extra-icons/jinja.svg", "Jinja: *.jinja, *.jinja2")
                     .end(".jinja", ".jinja2"),
                 ofFile("ext_cfg_ini", "extra-icons/config.svg", "Configuration: *.ini")
-                    .end(".ini"),
+                    .end(".ini")
+                    .autoLoadNewUIIconVariant(),
                 ofFile("ext_cfg_cfg", "extra-icons/config.svg", "Configuration: *.cfg")
-                    .end(".cfg"),
+                    .end(".cfg")
+                    .autoLoadNewUIIconVariant(),
                 ofFile("ext_cfg_conf", "extra-icons/config.svg", "Configuration: *.conf")
-                    .end(".conf"),
+                    .end(".conf")
+                    .autoLoadNewUIIconVariant(),
                 ofFile("ext_cfg_config", "extra-icons/config.svg", "Configuration: *.config")
-                    .end(".config"),
+                    .end(".config")
+                    .autoLoadNewUIIconVariant(),
                 ofFile("ext_jar", "extra-icons/jar.png", "Java archive: *.jar")
                     .end(".jar"),
                 ofFile("ext_jaroriginal", "extra-icons/jar.png", "Java archive (copy): *.jar.original")

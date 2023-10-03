@@ -29,7 +29,6 @@ plugins {
 }
 
 val pluginXmlFile = projectDir.resolve("src/main/resources/META-INF/plugin.xml")
-val pluginXmlFileBackup = projectDir.resolve("src/main/resources/META-INF/plugin.original.xml")
 
 // Import variables from gradle.properties file
 val pluginDownloadIdeaSources: String by project
@@ -68,8 +67,6 @@ val junitVersion = "5.10.0"
 val junitPlatformLauncher = "1.10.0"
 
 dependencies {
-    implementation("com.github.weisj:jsvg:1.1.0") // https://github.com/weisJ/jsvg
-
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitPlatformLauncher")
@@ -114,6 +111,9 @@ tasks {
             if (!pluginXmlStr.contains("<product-descriptor")) {
                 throw GradleException("plugin.xml: Product Descriptor is missing")
             }
+            if (pluginXmlStr.contains("//FREE_LIC//")) {
+                throw GradleException("plugin.xml: Product Descriptor is commented")
+            }
         }
     }
     register("removeLicenseRestrictionFromPluginXml") {
@@ -123,25 +123,20 @@ tasks {
             logger.warn("/!\\ Will build a plugin which doesn't ask for a paid license /!\\")
             logger.warn("----------------------------------------------------------------")
             var pluginXmlStr = pluginXmlFile.readText()
-            pluginXmlStr = pluginXmlStr.replace(Regex(
-                "<product-descriptor code=\"PEXTRAICONS\" release-date=\"\\d+\" release-version=\"\\d+\"/>"),
-                "")
-            pluginXmlFileBackup.delete()
-            FileUtils.moveFile(pluginXmlFile, pluginXmlFileBackup)
+            val paidLicenceBlockRegex = "<product-descriptor code=\"PEXTRAICONS\" release-date=\"\\d+\" release-version=\"\\d+\"/>".toRegex()
+            val paidLicenceBlockStr = paidLicenceBlockRegex.find(pluginXmlStr)!!.value
+            pluginXmlStr = pluginXmlStr.replace(paidLicenceBlockStr, "<!--//FREE_LIC//${paidLicenceBlockStr}//FREE_LIC//-->")
+            FileUtils.delete(pluginXmlFile)
             FileUtils.write(pluginXmlFile, pluginXmlStr, "UTF-8")
-            if (logger.isDebugEnabled) {
-                logger.debug("Saved a copy of {} to {}", pluginXmlFile, pluginXmlFileBackup)
-            }
         }
     }
-    register("restorePluginXml") {
-        // Task removeLicenseRestrictionFromPluginXml worked with a modified version of plugin.xml file -> restore original file
+    register("restoreLicenseRestrictionFromPluginXml") {
+        // Restore paid license requirement
         doLast {
-            FileUtils.copyFile(pluginXmlFileBackup, pluginXmlFile)
-            pluginXmlFileBackup.delete()
-            if (logger.isDebugEnabled) {
-                logger.debug("Restored original {} from {}", pluginXmlFile, pluginXmlFileBackup)
-            }
+            var pluginXmlStr = pluginXmlFile.readText()
+            pluginXmlStr = pluginXmlStr.replace("<!--//FREE_LIC//", "").replace("//FREE_LIC//-->", "")
+            FileUtils.delete(pluginXmlFile)
+            FileUtils.write(pluginXmlFile, pluginXmlStr, "UTF-8")
         }
     }
     register("renameDistributionNoLicense") {
@@ -241,7 +236,7 @@ tasks {
     }
     buildPlugin {
         if (!pluginNeedsLicense.toBoolean()) {
-            finalizedBy("restorePluginXml", "renameDistributionNoLicense")
+            finalizedBy("restoreLicenseRestrictionFromPluginXml", "renameDistributionNoLicense")
         }
     }
     publishPlugin {
